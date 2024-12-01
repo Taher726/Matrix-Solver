@@ -28,10 +28,12 @@ const SolutionPopup = ({ isOpen, onClose, L, U , solution, save} : { isOpen: boo
                                 </Typography>
                                 <Paper elevation={1} sx={{ p:2, bgcolor: "grey.50" }}>
                                     {
-                                        U.map((value, index) => (
-                                            <Box key={index} sx={{ display: "flex", alignItems: "center", gap: 1, mb: 1 }}>
-                                                <Typography fontWeight="medium" key={index} variant="body1" component="pre" sx={{ whiteSpace: 'pre-wrap', margin: 0, fontFamily: 'monospace' }}>
-                                                    {value.map(val => val.toFixed(2).toString().padStart(7)).join('')}
+                                        U.map((value, rowIndex) => (
+                                            <Box key={rowIndex} sx={{ display: "flex", alignItems: "center", gap: 1, mb: 1 }}>
+                                                <Typography fontWeight="medium" variant="body1" component="pre" sx={{ whiteSpace: 'pre-wrap', margin: 0, fontFamily: 'monospace' }}>
+                                                    {value.map((val, colIndex) => {
+                                                        return colIndex >= rowIndex ? val.toFixed(2).toString().padStart(7) : '       ';
+                                                    }).join('')}
                                                 </Typography>
                                             </Box>
                                         ))

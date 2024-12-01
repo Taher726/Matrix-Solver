@@ -3,12 +3,6 @@ import { Matrix, MatrixType, Vector } from "../types/Matrix";
 const detectMatrixType = (matrix: number[][]): { type: MatrixType; bandParameters?: { lowerWidth: number; upperWidth: number } } => {
     const n = matrix.length;
 
-    // Vérifier si la matrice est bande d'abord
-    const bandParams = detectBandParameters(matrix);
-    if (bandParams) {
-        return { type: 'bande', bandParameters: bandParams };
-    }
-
     if (is_triangulaire_low(matrix, n)) {
         return { type: 'triangulaire inférieure' };
     }
@@ -25,6 +19,12 @@ const detectMatrixType = (matrix: number[][]): { type: MatrixType; bandParameter
         return { type: 'symétrique' };
     }
 
+    // Vérifier si la matrice est bande d'abord
+    const bandParams = detectBandParameters(matrix);
+    if (bandParams) {
+        return { type: 'bande', bandParameters: bandParams };
+    }
+
     return { type: 'dense' };
 }
 
@@ -33,6 +33,7 @@ export const parseMatrixFile = (content: string) : { matrix: Matrix, vector: Vec
     let currentLine = 0;
     let matrixType: MatrixType = "dense";
     let size = 0;
+    let bandParameters;
 
     //Analyser le type de matrice s'il est present
     if(lines[currentLine].startsWith("Type de matrice:")){
@@ -61,6 +62,10 @@ export const parseMatrixFile = (content: string) : { matrix: Matrix, vector: Vec
         currentLine++;
     }
 
+    if(matrixType === "bande"){
+        bandParameters = detectBandParameters(matrixValues);
+    }
+
     //Passer les lignes vides
     while (currentLine < lines.length && (lines[currentLine].trim() === '' || lines[currentLine].includes('Vecteur b:'))) {
         currentLine++;
@@ -75,7 +80,6 @@ export const parseMatrixFile = (content: string) : { matrix: Matrix, vector: Vec
     }
 
     //Si le type de matrice n'est pas donné
-    let bandParameters;
     if (!lines[0].startsWith('Type de matrice:')) {
         const detected = detectMatrixType(matrixValues);
         matrixType = detected.type;
@@ -158,6 +162,8 @@ export const  isSymmetricPositiveDefinite = (matrix: number[][], n: number): boo
 }
 
 const detectBandParameters = (matrix: number[][]): { lowerWidth: number; upperWidth: number } | null => {
+    console.log(matrix);
+    
     const n = matrix.length;
     let lowerWidth = 0;
     let upperWidth = 0;

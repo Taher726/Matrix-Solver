@@ -25,15 +25,18 @@ export const solveUpperTriangular = (matrix: Matrix, b: Vector): LUResult => {
 
 const decompositionLU_SUP = (matrix: Matrix): [number[][], number[][]] => {
   const n = matrix.size;
-  const L: number[][] = Array.from({ length: n }, () => Array(n).fill(0.0));
+  const L: number[][] = Array.from({ length: n }, (_, i) => 
+    Array.from({ length: i + 1 }, () => 0.0)
+  );
   const U: number[][] = Array.from({ length: n }, () => Array(n).fill(0.0));
+  
 
   for(let i=0; i<n; i++){
     L[i][i] = 1;
     for(let j=i; j<n; j++)
       U[i][j] = matrix.values[i][j];
   }
-
+  
   return [L, U];
 }
 

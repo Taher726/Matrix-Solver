@@ -23,8 +23,10 @@ export const solveLowerTriangular = (matrix: Matrix, b: Vector): LUResult => {
 
 const decomposition_LU_INF = (matrix: Matrix): [number[][], number[][]] => {
   const n = matrix.size;
-  const L: number[][] = Array(n).fill(0).map(() => Array(n).fill(0));
-  const U: number[][] = Array(n).fill(0).map(() => Array(n).fill(0));
+  const L: number[][] = Array.from({ length: n }, (_, i) => 
+    Array.from({ length: i + 1 }, () => 0.0)
+  );
+  const U: number[][] = Array.from({ length: n }, () => Array(n).fill(0.0));
   for(let i=0; i<n; i++){
     U[i][i] = matrix.values[i][i];
     L[i][i] = 1;

@@ -4,6 +4,7 @@ import Navbar from "./components/Navbar";
 import { Routes, Route } from "react-router-dom";
 import Home from "./pages/Home";
 import Solver from "./pages/Solver";
+import History from "./pages/History";
 
 const theme = createTheme({
   palette: {
@@ -82,6 +83,7 @@ function App(){
         <Routes>
           <Route path="/" element={<Home/>}/>
           <Route path="/solver" element={<Solver/>}/>
+          <Route path="/history" element={<History/>}/>
         </Routes>
       </BrowserRouter>
     </ThemeProvider>

@@ -2,8 +2,10 @@ import { Matrix, Vector, LUResult } from '../../types/Matrix';
 
 export const solveSymmetricPositiveDefinite = (matrix: Matrix, b: Vector): LUResult => {
   const n = matrix.size;
-  const L: number[][] = Array(n).fill(0).map(() => Array(n).fill(0));
-  const U: number[][] = Array(n).fill(0).map(() => Array(n).fill(0));
+  const L: number[][] = Array.from({ length: n }, (_, i) => 
+    Array.from({ length: i + 1 }, () => 0.0)
+  );
+  const U: number[][] = Array.from({ length: n }, () => Array(n).fill(0.0));
   const x: number[] = Array(n).fill(0);
   const y: number[] = Array(n).fill(0);
 

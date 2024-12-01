@@ -53,7 +53,9 @@ export const solveSymmetric = (matrix: Matrix, b: Vector): LUResult => {
 
 const decompositionLUSym = (matrix: Matrix): [number[][], number[][]] => {
   const n = matrix.size;
-  const L: number[][] = Array.from({ length: n }, () => Array(n).fill(0.0));
+  const L: number[][] = Array.from({ length: n }, (_, i) => 
+    Array.from({ length: i + 1 }, () => 0.0)
+  );
   const U: number[][] = Array.from({ length: n }, () => Array(n).fill(0.0));
 
   for (let i = 0; i < n; i++) {

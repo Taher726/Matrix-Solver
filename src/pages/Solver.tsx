@@ -8,8 +8,12 @@ import SolutionPopup from "../components/SolutionPopup";
 import FileLoader from "../components/FileLoader";
 import { parseMatrixFile } from "../utils/fileParser";
 import BandMatrixParameters from "../components/BandMatrixParameters";
+import { useLocation } from "react-router-dom";
+import { Resolution } from "../types/History";
+import { saveResolution } from "../utils/history/historyService";
 
 const Solver = () => {
+    const location = useLocation();
     const [size, setSize] = useState<number>(2);
     const [matrixType, setMatrixType] = useState<MatrixType>('dense');
     const [matrix, setMatrix] = useState<Matrix>({
@@ -27,6 +31,7 @@ const Solver = () => {
     const [solution, setSolution] = useState<number[]>([]);
     const [isFileUploaded, setIsFileUploaded] = useState(false);
     const [bandParameters, setBandParameters] = useState({lowerWidth: 1, upperWidth: 1});
+    const [result, setResult] = useState<Resolution | null>(null);
 
     const handleMatrixChange = (row: number, col: number, value: number) => {
         const newMatrix = { ...matrix };
@@ -46,12 +51,16 @@ const Solver = () => {
         setVecteurU(result.U);
         setSolution(result.x);
         setShowSolution(true);
+        const resolution = saveResolution({
+            matrix: matrix,
+            vector: vecteur,
+            result
+        });
+        setResult(resolution);
        }
        else{
         const randomMatrix = generateRandomMatrix(size, matrixType, matrixType === "bande" ? bandParameters : undefined);
         const randomVector = generateRandomVector(size);
-        console.log(randomMatrix);
-        console.log(randomVector);
         const result = solve(randomMatrix, randomVector);
         saveToFile(randomMatrix, randomVector, result);
        }
@@ -70,7 +79,16 @@ const Solver = () => {
     }
 
     useEffect(() =>{
-        if(!isFileUploaded){
+        const state = location.state as { resolution?: Resolution };
+        if(state?.resolution){
+            const { matrix: savedMatrix, vector: savedVector } = state.resolution;
+            setSize(savedMatrix.size);
+            setMatrixType(savedMatrix.type);
+            setMatrix(savedMatrix);
+            setVecteur(savedVector);
+            setResult(state.resolution);
+        }
+        else if(!isFileUploaded){
             const newMatrix = {
                 values: Array(size).fill(0).map(() => Array(size).fill(0)),
                 type: matrixType,
@@ -87,7 +105,7 @@ const Solver = () => {
         else{
             setIsFileUploaded(false);
         }
-    }, [size, matrixType, bandParameters])
+    }, [size, matrixType, bandParameters, location])
 
     return(
         <Container sx={{ py:4 }}>

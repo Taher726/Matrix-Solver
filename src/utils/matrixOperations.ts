@@ -117,7 +117,7 @@ export const solve = (matrix: Matrix, b: Vector): LUResult => {
 
 export const formatMatrix = (matrix: number[][]): string => {
   return matrix.map(row => 
-    row.map(val => val.toFixed(0).padStart(10)).join('')
+    row.map(val => val.toFixed(2).padStart(10)).join('')
   ).join('\n');
 };
 
