@@ -12,7 +12,7 @@ const Footer = () => {
                     </Box>
                     <Box sx={{ textDecoration: "none", background: "linear-gradient(135deg, #2563eb 0%, #7c3aed 100%)", backgroundClip: "text", WebkitBackgroundClip: "text", color: "transparent" }}>
                     <Typography variant="h6" sx={{ fontWeight: 600, fontSize: "18px" }}>
-                        Supervisé par Docteur Sirine Marrakchi
+                        Supervisé par Dr.Sirine Marrakchi
                     </Typography>
                     </Box>
                 </Box>
