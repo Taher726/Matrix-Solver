@@ -1,6 +1,6 @@
 import { Dialog, DialogContent, DialogTitle, Typography, Box, Paper, Button } from "@mui/material";
 
-const SolutionPopup = ({ isOpen, onClose, L, U , solution, save} : { isOpen: boolean, onClose: () => void, L: number[][] | null, U: number[][] | null, solution: number[] | null, save: () => void }) => {    
+const SolutionPopup = ({ isOpen, onClose, L, U, complexity, solution, save} : { isOpen: boolean, onClose: () => void, L: number[][] | null, U: number[][] | null, complexity: number | undefined, solution: number[] | null, save: () => void }) => {    
     return(
         <Dialog open={isOpen} onClose={onClose} maxWidth="sm" fullWidth>
             <DialogTitle textAlign="center" variant="h5">Solution du système</DialogTitle>
@@ -56,6 +56,11 @@ const SolutionPopup = ({ isOpen, onClose, L, U , solution, save} : { isOpen: boo
                                     </Box>
                                 ))}
                                 </Paper>
+                            </Box>
+                            <Box sx={{ mt: 2 }}>
+                                <Typography variant="subtitle1" color="text.secondary">
+                                    Complexité = {complexity} secondes
+                                </Typography>
                             </Box>
                             <Box sx={{ display: "flex", justifyContent: "center" }}>
                                 <Button variant="contained" size="large" sx={{ mt: 2, background:'linear-gradient(135deg, #2563eb 0%, #7c3aed 100%)', "&:hover": 'linear-gradient(135deg, #1d4ed8 0%, #6d28d9 100%)' }} onClick={save}>

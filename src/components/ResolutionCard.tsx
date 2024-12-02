@@ -13,7 +13,7 @@ const ResolutionCard = ({ resolution, onDelete, onReuse }: { resolution: Resolut
         ).join('\n');
       };
     return(
-        <Card>
+        <Card sx={{ mb: 3}}>
             <CardContent>
                 <Typography variant="h6" gutterBottom>
                     Résolution du {formatDate(resolution.timestamp)}

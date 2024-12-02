@@ -5,6 +5,7 @@ import { resolution_LU_SUP } from './solvers/upperTriangulaire';
 import { resolution_LU_INF } from './solvers/LowerTriangulaire';
 import { resolutionLUSym } from './solvers/symetric';
 import { resolution_bande_LU } from './solvers/bandeResolution';
+import { isSymmetricPositiveDefinite } from '../components/MatrixInput';
 
 export const generateRandomMatrix = (size: number, type: MatrixType, bandParameters?: {lowerWidth: number, upperWidth: number}): Matrix => {
   const matrix: number[][] = Array.from({ length: size }, () => Array(size).fill(0));
@@ -13,18 +14,18 @@ export const generateRandomMatrix = (size: number, type: MatrixType, bandParamet
     case 'triangulaire supérieure':
       for (let i = 0; i < size; i++) {
         for (let j = i; j < size; j++) {
-          matrix[i][j] = Math.floor(Math.random() * 10); // Generate integers between 0 and 9
+          matrix[i][j] = Math.floor(Math.random() * 10);
         }
-        matrix[i][i] = Math.floor(Math.random() * 10) + size; // Ensure diagonal dominance
+        matrix[i][i] = Math.floor(Math.random() * 10) + size;
       }
       break;
 
     case 'triangulaire inférieure':
       for (let i = 0; i < size; i++) {
         for (let j = 0; j <= i; j++) {
-          matrix[i][j] = Math.floor(Math.random() * 10); // Generate integers between 0 and 9
+          matrix[i][j] = Math.floor(Math.random() * 10);
         }
-        matrix[i][i] = Math.floor(Math.random() * 10) + size; // Ensure diagonal dominance
+        matrix[i][i] = Math.floor(Math.random() * 10) + size;
       }
       break;
 
@@ -32,12 +33,12 @@ export const generateRandomMatrix = (size: number, type: MatrixType, bandParamet
     case 'symétrique définie positive':
       for (let i = 0; i < size; i++) {
         for (let j = 0; j <= i; j++) {
-          const value = Math.floor(Math.random() * 10); // Generate integers between 0 and 9
+          const value = Math.floor(Math.random() * 10);
           matrix[i][j] = value;
           matrix[j][i] = value;
         }
         if (type === 'symétrique définie positive') {
-          matrix[i][i] += size * 10; // Ensure positive definiteness
+          matrix[i][i] += size * 10;
         }
       }
       break;
@@ -82,9 +83,9 @@ export const generateRandomMatrix = (size: number, type: MatrixType, bandParamet
     default:
       for (let i = 0; i < size; i++) {
         for (let j = 0; j < size; j++) {
-          matrix[i][j] = Math.floor(Math.random() * 10); // Generate integers between 0 and 9
+          matrix[i][j] = Math.floor(Math.random() * 10);
         }
-        matrix[i][i] = Math.floor(Math.random() * 10) + size; // Ensure diagonal dominance
+        matrix[i][i] = Math.floor(Math.random() * 10) + size;
       }
   }
   return { values: matrix, type, size };
@@ -92,7 +93,7 @@ export const generateRandomMatrix = (size: number, type: MatrixType, bandParamet
 
 export const generateRandomVector = (size: number): Vector => {
   return {
-    values: Array.from({ length: size }, () => Math.floor(Math.random() * 10)), // Generate integers between 0 and 9
+    values: Array.from({ length: size }, () => Math.floor(Math.random() * 10)),
     size,
   };
 };
@@ -107,7 +108,10 @@ export const solve = (matrix: Matrix, b: Vector): LUResult => {
     case 'symétrique':
       return resolutionLUSym(matrix, b);
     case 'symétrique définie positive':
-      return resolutionLUSym(matrix, b);
+      if(isSymmetricPositiveDefinite(matrix.values))
+        return resolutionLUSym(matrix, b);
+      else
+        return resolutionLUSym(matrix, b);
     case "bande":
       return resolution_bande_LU(matrix, b);
     default:
@@ -121,15 +125,34 @@ export const formatMatrix = (matrix: number[][]): string => {
   ).join('\n');
 };
 
+export const formatUpperTriangulaireMatrix = (matrix: number[][]): string => {
+  return matrix
+    .map((row, rowIndex) => {
+      return row
+        .map((val, colIndex) => {
+          return colIndex >= rowIndex ? val.toFixed(2).toString().padStart(10) : ''.padStart(10);
+        })
+        .join(''); 
+    })
+    .join('\n');
+};
+
 export const saveToFile = (matrix: Matrix, vector: Vector, result: LUResult) => {
-  let content = `Type de matrice: ${matrix.type}\n`;
+  let matrixType = "";
+  if(matrix.type === "symétrique définie positive"){
+    if(isSymmetricPositiveDefinite(matrix.values))
+      matrixType = "symétrique définie positive";
+    else
+      matrixType = "symétrique"
+  }
+  let content = `Type de matrice: ${matrixType}\n`;
   content += `Taille: ${matrix.size}\n\n`;
   content += "Matrice A:\n";
   content += formatMatrix(matrix.values);
   content += "\n\nMatrice L:\n";
   content += formatMatrix(result.L);
   content += "\n\nMatrice U:\n";
-  content += formatMatrix(result.U);
+  content += formatUpperTriangulaireMatrix(result.U);
   content += "\n\nVecteur b:\n";
   content += vector.values.map(v => v.toFixed(0)).join('\n');
   content += "\n\nSolution x:\n";

@@ -19,4 +19,5 @@ export interface LUResult {
     L: number[][];
     U: number[][];
     x: number[];
+    complexity:number;
 }

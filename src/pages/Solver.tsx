@@ -29,6 +29,7 @@ const Solver = () => {
     const [vecteurL, setVecteurL] = useState<number[][]>([[]]);
     const [vecteurU, setVecteurU] = useState<number[][]>([[]]);
     const [solution, setSolution] = useState<number[]>([]);
+    const [complexity, setComplexity] = useState<number>();
     const [isFileUploaded, setIsFileUploaded] = useState(false);
     const [bandParameters, setBandParameters] = useState({lowerWidth: 1, upperWidth: 1});
     const [result, setResult] = useState<Resolution | null>(null);
@@ -50,6 +51,7 @@ const Solver = () => {
         setVecteurL(result.L);
         setVecteurU(result.U);
         setSolution(result.x);
+        setComplexity(result.complexity);
         setShowSolution(true);
         const resolution = saveResolution({
             matrix: matrix,
@@ -171,7 +173,7 @@ const Solver = () => {
                 Pour n &gt; 10, la matrice sera générée aléatoirement et la solution sera sauvegardée dans un fichier.
                 </Typography>
             )}
-            <SolutionPopup isOpen={showSolution} onClose={() => setShowSolution(false)} L={vecteurL} U={vecteurU} solution={solution} save={() => saveToFile(matrix, vecteur, { L: vecteurL, U: vecteurU, x: solution })} />
+            <SolutionPopup isOpen={showSolution} onClose={() => setShowSolution(false)} L={vecteurL} U={vecteurU} solution={solution} complexity={complexity} save={() => saveToFile(matrix, vecteur, { L: vecteurL, U: vecteurU, x: solution , complexity: complexity!})} />
         </Container>
     )
 }

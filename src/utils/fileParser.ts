@@ -22,6 +22,9 @@ const detectMatrixType = (matrix: number[][]): { type: MatrixType; bandParameter
     // Vérifier si la matrice est bande d'abord
     const bandParams = detectBandParameters(matrix);
     if (bandParams) {
+        console.log(bandParams);
+        if(bandParams.lowerWidth+bandParams.upperWidth+1 >= n)
+            return { type: 'dense' };
         return { type: 'bande', bandParameters: bandParams };
     }
 
@@ -124,7 +127,7 @@ const is_triangulaire_low = (matrix: number[][], n: number): boolean => {
     return true;
 }
 
-const determinant = (matrix: number[][]): number => {
+export const determinant = (matrix: number[][]): number => {
     const n = matrix.length;
   
     if (n === 1) {
@@ -139,7 +142,6 @@ const determinant = (matrix: number[][]): number => {
       det += ((-1) ** c) * matrix[0][c] * determinant(minor);
     }
   
-    console.log(det);
     return det;
 }
     

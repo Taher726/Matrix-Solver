@@ -1,10 +1,11 @@
-import { createTheme, CssBaseline, ThemeProvider } from "@mui/material";
+import { createTheme, CssBaseline, ThemeProvider, Box } from "@mui/material";
 import { BrowserRouter } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import { Routes, Route } from "react-router-dom";
 import Home from "./pages/Home";
 import Solver from "./pages/Solver";
 import History from "./pages/History";
+import Footer from "./components/Footer";
 
 const theme = createTheme({
   palette: {
@@ -79,12 +80,17 @@ function App(){
     <ThemeProvider theme={theme}>
       <CssBaseline/>
       <BrowserRouter>
-        <Navbar/>
-        <Routes>
-          <Route path="/" element={<Home/>}/>
-          <Route path="/solver" element={<Solver/>}/>
-          <Route path="/history" element={<History/>}/>
-        </Routes>
+        <Box sx={{display: 'flex', flexDirection: 'column', minHeight: '100vh',}}>
+          <Navbar />
+          <Box sx={{ flex: 1 }}>
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/solver" element={<Solver />} />
+              <Route path="/history" element={<History />} />
+            </Routes>
+          </Box>
+          <Footer />
+        </Box>
       </BrowserRouter>
     </ThemeProvider>
   );
