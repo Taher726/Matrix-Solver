@@ -145,6 +145,8 @@ export const saveToFile = (matrix: Matrix, vector: Vector, result: LUResult) => 
     else
       matrixType = "symétrique"
   }
+  else
+    matrixType = matrix.type;
   let content = `Type de matrice: ${matrixType}\n`;
   content += `Taille: ${matrix.size}\n\n`;
   content += "Matrice A:\n";
